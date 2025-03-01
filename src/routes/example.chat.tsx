@@ -7,6 +7,9 @@ import {
     Settings,
     Edit2,
 } from 'lucide-solid'
+import MarkdownIt from 'markdown-it';
+
+const md = new MarkdownIt();
 
 import { SettingsDialog } from '../components/demo.SettingsDialog'
 import { useAppActions, useAppSelectors, useAppState } from '../store/demo.hooks'
@@ -23,8 +26,8 @@ function Home() {
     const actions = useAppActions();
     const selectors = useAppSelectors();
 
-    const currentConversation = selectors.getCurrentConversation(store.state)
-    const messages = () => currentConversation?.messages || []
+    const currentConversation = () => state().conversations.find(c => c.id === state().currentConversationId)
+    const messages = () => currentConversation()?.messages || []
 
     // Local state
     const [input, setInput] = createSignal('')
@@ -32,6 +35,20 @@ function Home() {
     const [isSettingsOpen, setIsSettingsOpen] = createSignal(false)
     let messagesContainerRef: HTMLDivElement | null;
     const [pendingMessage, setPendingMessage] = createSignal<Message | null>(null)
+
+    const scrollToBottom = () => {
+        if (messagesContainerRef) {
+            messagesContainerRef.scrollTop =
+                messagesContainerRef.scrollHeight
+        }
+    }
+
+    // Scroll to bottom when messages change or loading state changes
+    createEffect(() => {
+        state().isLoading;
+        messages();
+        scrollToBottom()
+    })
 
     const handleSubmit = async (e: any) => {
         e.preventDefault()
@@ -262,8 +279,7 @@ function Home() {
                                                         Y
                                                     </div>
                                                 )}
-                                                <div class="flex-1 min-w-0 text-white">
-                                                    {message!.content}
+                                                <div innerHTML={md.render(message!.content)} class="flex-1 min-w-0 text-white">
                                                 </div>
                                             </div>
                                         </div>
@@ -314,7 +330,6 @@ function Home() {
                                     <div class="relative">
                                         <textarea
                                             value={input()}
-                                            onChange={handleInputChange}
                                             onKeyDown={(e) => {
                                                 if (e.key === 'Enter' && !e.shiftKey) {
                                                     e.preventDefault()
@@ -330,6 +345,7 @@ function Home() {
                                                 target.style.height = 'auto'
                                                 target.style.height =
                                                     Math.min(target.scrollHeight, 200) + 'px'
+                                                handleInputChange(e)
                                             }}
                                         />
                                         <button
@@ -337,7 +353,7 @@ function Home() {
                                             disabled={!input().trim() || state().isLoading}
                                             class="absolute right-2 top-1/2 -translate-y-1/2 p-2 text-orange-500 hover:text-orange-400 disabled:text-gray-500 transition-colors focus:outline-none"
                                         >
-                                            <Send class="w-4 h-4" />1
+                                            <Send class="w-4 h-4" />
                                         </button>
                                     </div>
                                 </form>
