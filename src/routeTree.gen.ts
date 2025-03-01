@@ -12,12 +12,40 @@
 
 import { Route as rootRoute } from './routes/__root'
 import { Route as IndexImport } from './routes/index'
+import { Route as ExampleChatImport } from './routes/example.chat'
+import { Route as DemoStoreImport } from './routes/demo.store'
+import { Route as DemoStartServerFuncsImport } from './routes/demo.start.server-funcs'
+import { Route as DemoStartApiRequestImport } from './routes/demo.start.api-request'
 
 // Create/Update Routes
 
 const IndexRoute = IndexImport.update({
   id: '/',
   path: '/',
+  getParentRoute: () => rootRoute,
+} as any)
+
+const ExampleChatRoute = ExampleChatImport.update({
+  id: '/example/chat',
+  path: '/example/chat',
+  getParentRoute: () => rootRoute,
+} as any)
+
+const DemoStoreRoute = DemoStoreImport.update({
+  id: '/demo/store',
+  path: '/demo/store',
+  getParentRoute: () => rootRoute,
+} as any)
+
+const DemoStartServerFuncsRoute = DemoStartServerFuncsImport.update({
+  id: '/demo/start/server-funcs',
+  path: '/demo/start/server-funcs',
+  getParentRoute: () => rootRoute,
+} as any)
+
+const DemoStartApiRequestRoute = DemoStartApiRequestImport.update({
+  id: '/demo/start/api-request',
+  path: '/demo/start/api-request',
   getParentRoute: () => rootRoute,
 } as any)
 
@@ -32,6 +60,34 @@ declare module '@tanstack/solid-router' {
       preLoaderRoute: typeof IndexImport
       parentRoute: typeof rootRoute
     }
+    '/demo/store': {
+      id: '/demo/store'
+      path: '/demo/store'
+      fullPath: '/demo/store'
+      preLoaderRoute: typeof DemoStoreImport
+      parentRoute: typeof rootRoute
+    }
+    '/example/chat': {
+      id: '/example/chat'
+      path: '/example/chat'
+      fullPath: '/example/chat'
+      preLoaderRoute: typeof ExampleChatImport
+      parentRoute: typeof rootRoute
+    }
+    '/demo/start/api-request': {
+      id: '/demo/start/api-request'
+      path: '/demo/start/api-request'
+      fullPath: '/demo/start/api-request'
+      preLoaderRoute: typeof DemoStartApiRequestImport
+      parentRoute: typeof rootRoute
+    }
+    '/demo/start/server-funcs': {
+      id: '/demo/start/server-funcs'
+      path: '/demo/start/server-funcs'
+      fullPath: '/demo/start/server-funcs'
+      preLoaderRoute: typeof DemoStartServerFuncsImport
+      parentRoute: typeof rootRoute
+    }
   }
 }
 
@@ -39,32 +95,68 @@ declare module '@tanstack/solid-router' {
 
 export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
+  '/demo/store': typeof DemoStoreRoute
+  '/example/chat': typeof ExampleChatRoute
+  '/demo/start/api-request': typeof DemoStartApiRequestRoute
+  '/demo/start/server-funcs': typeof DemoStartServerFuncsRoute
 }
 
 export interface FileRoutesByTo {
   '/': typeof IndexRoute
+  '/demo/store': typeof DemoStoreRoute
+  '/example/chat': typeof ExampleChatRoute
+  '/demo/start/api-request': typeof DemoStartApiRequestRoute
+  '/demo/start/server-funcs': typeof DemoStartServerFuncsRoute
 }
 
 export interface FileRoutesById {
   __root__: typeof rootRoute
   '/': typeof IndexRoute
+  '/demo/store': typeof DemoStoreRoute
+  '/example/chat': typeof ExampleChatRoute
+  '/demo/start/api-request': typeof DemoStartApiRequestRoute
+  '/demo/start/server-funcs': typeof DemoStartServerFuncsRoute
 }
 
 export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
-  fullPaths: '/'
+  fullPaths:
+    | '/'
+    | '/demo/store'
+    | '/example/chat'
+    | '/demo/start/api-request'
+    | '/demo/start/server-funcs'
   fileRoutesByTo: FileRoutesByTo
-  to: '/'
-  id: '__root__' | '/'
+  to:
+    | '/'
+    | '/demo/store'
+    | '/example/chat'
+    | '/demo/start/api-request'
+    | '/demo/start/server-funcs'
+  id:
+    | '__root__'
+    | '/'
+    | '/demo/store'
+    | '/example/chat'
+    | '/demo/start/api-request'
+    | '/demo/start/server-funcs'
   fileRoutesById: FileRoutesById
 }
 
 export interface RootRouteChildren {
   IndexRoute: typeof IndexRoute
+  DemoStoreRoute: typeof DemoStoreRoute
+  ExampleChatRoute: typeof ExampleChatRoute
+  DemoStartApiRequestRoute: typeof DemoStartApiRequestRoute
+  DemoStartServerFuncsRoute: typeof DemoStartServerFuncsRoute
 }
 
 const rootRouteChildren: RootRouteChildren = {
   IndexRoute: IndexRoute,
+  DemoStoreRoute: DemoStoreRoute,
+  ExampleChatRoute: ExampleChatRoute,
+  DemoStartApiRequestRoute: DemoStartApiRequestRoute,
+  DemoStartServerFuncsRoute: DemoStartServerFuncsRoute,
 }
 
 export const routeTree = rootRoute
@@ -77,11 +169,27 @@ export const routeTree = rootRoute
     "__root__": {
       "filePath": "__root.tsx",
       "children": [
-        "/"
+        "/",
+        "/demo/store",
+        "/example/chat",
+        "/demo/start/api-request",
+        "/demo/start/server-funcs"
       ]
     },
     "/": {
       "filePath": "index.tsx"
+    },
+    "/demo/store": {
+      "filePath": "demo.store.tsx"
+    },
+    "/example/chat": {
+      "filePath": "example.chat.tsx"
+    },
+    "/demo/start/api-request": {
+      "filePath": "demo.start.api-request.tsx"
+    },
+    "/demo/start/server-funcs": {
+      "filePath": "demo.start.server-funcs.tsx"
     }
   }
 }
